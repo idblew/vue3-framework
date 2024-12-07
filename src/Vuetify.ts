@@ -1,5 +1,5 @@
 import { createVuetify } from "vuetify";
-import { dark, light, Theme } from "./Theme";
+import { dark, light, Theme } from "./theme/ThemeStore";
 
 const vuetify = createVuetify({
     defaults: {
@@ -11,7 +11,7 @@ const vuetify = createVuetify({
         },
     },
     theme: {
-        defaultTheme: Theme.LIGHT,
+        defaultTheme: Theme.DARK,
         themes: { light, dark },
     },
 });

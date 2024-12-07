@@ -20,7 +20,7 @@
                                 v-bind="itemProps"
                                 :prepend-icon="route.meta.menuItem?.icon"
                                 :title="route.meta.menuItem?.title"
-                                color="white"
+                                color="primary--text"
                                 slim
                             />
                         </template>
@@ -63,7 +63,7 @@
                             variant="tonal"
                         />
                     </template>
-                    <v-list>
+                    <v-list class="pb-0">
                         <v-list-item
                             :title="name"
                             lines="two"
@@ -76,6 +76,14 @@
                             subtitle="Adjust preferences"
                             title="Settings"
                         />
+                        <v-divider />
+                        <v-list-item
+                            lines="two"
+                            prepend-icon="mdi-theme-light-dark"
+                            subtitle="Display Mode"
+                            title="Theme"
+                        />
+                        <theme-selection class="pl-2" />
                         <v-divider />
                         <v-list-item prepend-icon="mdi-logout" title="Sign Out" @click="signOut" />
                     </v-list>
@@ -94,11 +102,11 @@
 import { computed, provide, unref } from "vue";
 import { RouterView } from "vue-router";
 
+import { byIndex, hasMenuItem } from "@/Routes";
+import type { Services } from "@/Services";
+import { defineStore, StoreKey } from "@/Store";
 import logo from "@/assets/logo.png";
-import { byIndex, hasMenuItem } from "./Routes";
-import type { Services } from "./Services";
-import { defineStore, StoreKey } from "./Store";
-import useTheme from "./Theme";
+import ThemeSelection from "@/theme/ThemeSelection.vue";
 
 const props = defineProps<{
     services: Services;
@@ -109,12 +117,14 @@ provide(StoreKey, stores);
 
 const { router } = stores;
 const { topLevelRoutes } = router;
+const { theme } = stores.themeStore;
 
-const theme = useTheme();
 const routes = unref(topLevelRoutes)
     .filter((route) => hasMenuItem(route))
     .sort(byIndex);
+
 const name = computed<string>(() => "User Name");
+
 function signOut() {}
 </script>
 
@@ -140,5 +150,9 @@ a[target="_blank"]::after {
 
 .v-list-group {
     --prepend-width: 25px !important;
+}
+
+.v-list-item__prepend .v-icon {
+    opacity: 1;
 }
 </style>
