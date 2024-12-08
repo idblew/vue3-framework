@@ -153,6 +153,6 @@ a[target="_blank"]::after {
 }
 
 .v-list-item__prepend .v-icon {
-    opacity: 1;
+    opacity: 1 !important;
 }
 </style>
