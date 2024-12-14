@@ -79,7 +79,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
     },
     {
         name: "Beta",
-        path: "",
+        path: "/beta",
         meta: {
             menuItem: {
                 index: 2,

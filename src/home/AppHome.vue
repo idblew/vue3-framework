@@ -3,7 +3,7 @@
         <v-card
             v-for="route in routes"
             :key="route.name"
-            :to="route.path"
+            :to="route.components ? route.path : ''"
             class="d-flex flex-nowrap grid-item"
             width="400"
         >
@@ -18,8 +18,9 @@
                 <v-card-text class="px-3">
                     <div v-for="child in route.children" :key="child.name">
                         <v-btn
+                            v-tooltip="child.meta?.menuItem?.description"
                             :text="child.name as string"
-                            :to="child.path"
+                            :to="child"
                             class="pa-0"
                             density="compact"
                             justify-start
