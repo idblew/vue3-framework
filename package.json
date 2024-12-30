@@ -19,8 +19,8 @@
     "checks": "run-p format:check lint type-check"
   },
   "engines": {
-    "node": ">=22.11.0",
-    "npm": ">=10.9.0"
+    "node": ">=20.18.1",
+    "npm": ">=10.8.2"
   },
   "dependencies": {
     "@fontsource/roboto": "~5.1.1",
