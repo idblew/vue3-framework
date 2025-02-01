@@ -1,10 +1,19 @@
-import { computed, type Ref, unref } from "vue";
-import type { Router, RouteRecordNormalized } from "vue-router";
+import { computed, reactive, type Ref, toRefs, unref } from "vue";
+import type {
+    RouteLocationNormalizedLoadedGeneric,
+    Router,
+    RouteRecordNormalized,
+} from "vue-router";
 
 import type { Services } from "@/Services";
 import type { Store } from "@/Store";
 
 import useRouteGuards from "./RouteGuards";
+
+interface State {
+    previousRoute?: RouteLocationNormalizedLoadedGeneric;
+    processingGuard: boolean;
+}
 
 export interface RouterStore extends Router {
     readonly topLevelRoutes: Ref<RouteRecordNormalized[]>;
@@ -12,17 +21,26 @@ export interface RouterStore extends Router {
 }
 
 export default function useRouterStore(services: Services, store: Store): RouterStore {
+    const state = reactive<State>({
+        previousRoute: undefined,
+        processingGuard: false,
+    });
     const { vueRouter } = services;
     const { getRoutes } = vueRouter;
     const guards = useRouteGuards(store);
 
     vueRouter.beforeEach(async (to, from, next) => {
+        state.processingGuard = true;
+
+        state.previousRoute = from;
         const guard = guards.get(to);
         if (guard) {
             await guard(to, from, next);
         } else {
             next();
         }
+
+        state.processingGuard = false;
     });
 
     const topLevelRoutes = computed(() => {
@@ -43,6 +61,7 @@ export default function useRouterStore(services: Services, store: Store): Router
     }
 
     return {
+        ...toRefs(state),
         ...vueRouter,
         topLevelRoutes,
         reloadRoute,

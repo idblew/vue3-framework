@@ -97,10 +97,15 @@
             </template>
         </v-app-bar>
         <v-main class="d-flex flex-column flex-1-1-100">
-            <router-view v-slot="{ Component, route }" name="main">
-                <notification-snackbar :theme="theme" />
-                <component :is="Component" :key="route.name" />
-            </router-view>
+            <v-container height="100%" max-width="100%" style="position: relative">
+                <v-overlay v-model="processingGuard" class="align-center justify-center" contained>
+                    <v-progress-circular color="primary" size="100" width="10" indeterminate />
+                </v-overlay>
+                <router-view v-slot="{ Component, route }" name="main" style="position: relative">
+                    <notification-snackbar :theme="theme" />
+                    <component :is="Component" :key="route.name" />
+                </router-view>
+            </v-container>
         </v-main>
     </v-app>
 </template>
@@ -123,7 +128,7 @@ const stores = defineStore(props.services);
 provide(StoreKey, stores);
 
 const { notificationStore, router } = stores;
-const { topLevelRoutes } = router;
+const { processingGuard, topLevelRoutes } = router;
 const { theme } = stores.themeStore;
 
 const routes = unref(topLevelRoutes)

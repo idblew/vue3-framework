@@ -75,6 +75,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
                 title: "Alpha",
                 description: "Alpha Description",
             },
+            guardName: "sampleGuardWithRandomDelay",
         },
     },
     {
@@ -100,6 +101,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
                         title: "Beta 1",
                         description: "Beta 1 Description",
                     },
+                    guardName: "sampleGuardWithRandomDelay",
                 },
             },
             {
@@ -113,6 +115,7 @@ const routes: Readonly<RouteRecordRaw[]> = [
                         title: "Beta 2",
                         description: "Beta 2 Description",
                     },
+                    guardName: "sampleGuardWithRandomDelay",
                 },
             },
         ],
