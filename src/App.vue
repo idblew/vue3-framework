@@ -12,7 +12,12 @@
                     <small>&copy; 2024 <em>Your name here</em></small>
                 </v-footer>
             </template>
-            <v-list density="compact" open-strategy="single" variant="plain">
+            <v-list
+                density="compact"
+                open-strategy="single"
+                variant="plain"
+                @update:opened="blurMenu"
+            >
                 <template v-for="route in routes" :key="route.name">
                     <v-list-group v-if="route.children.length > 0">
                         <template #activator="{ props: itemProps }">
@@ -27,7 +32,9 @@
                         <v-list-item
                             v-for="child in route.children.filter((child) => child.path)"
                             :key="child.name"
+                            :active="child.name === menuSelection"
                             :prepend-icon="child.meta?.menuItem?.icon"
+                            :selected="child.name === menuSelection"
                             :title="child.meta?.menuItem?.title"
                             :to="child"
                             :value="child.name"
@@ -37,7 +44,9 @@
                     </v-list-group>
                     <v-list-item
                         v-else
+                        :active="route.name === menuSelection"
                         :prepend-icon="route.meta.menuItem?.icon"
+                        :selected="route.name === menuSelection"
                         :title="route.meta.menuItem?.title"
                         :to="route"
                         :value="route.name"
@@ -52,12 +61,6 @@
                 <v-app-bar-title class="text-h5"><em>Application Name</em></v-app-bar-title>
             </template>
             <template #append>
-                <v-btn
-                    v-tooltip="'Generate Random Notification'"
-                    class="mr-5"
-                    icon="mdi-bell-ring"
-                    @click="notificationStore.generateRandomNotification"
-                />
                 <v-menu>
                     <template #activator="{ props: btnProps }">
                         <v-btn
@@ -111,13 +114,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, provide, unref } from "vue";
-import { RouterView } from "vue-router";
+import { computed, provide, ref, unref, watchEffect } from "vue";
+import { RouterView, type RouteRecordNameGeneric } from "vue-router";
 import { byIndex, hasMenuItem } from "@/Routes";
 import type { Services } from "@/Services";
 import { defineStore, StoreKey } from "@/Store";
 import logo from "@/assets/logo.png";
-import NotificationSnackbar from "./notification/NotificationSnackbar.vue";
+import NotificationSnackbar from "@/notification/NotificationSnackbar.vue";
 import ThemeSelection from "@/theme/ThemeSelection.vue";
 
 const props = defineProps<{
@@ -127,13 +130,32 @@ const props = defineProps<{
 const stores = defineStore(props.services);
 provide(StoreKey, stores);
 
-const { notificationStore, router } = stores;
-const { processingGuard, topLevelRoutes } = router;
+const { router } = stores;
+const { guardError, processingGuard, topLevelRoutes } = router;
 const { theme } = stores.themeStore;
 
 const routes = unref(topLevelRoutes)
     .filter((route) => hasMenuItem(route))
     .sort(byIndex);
+
+const menuSelection = ref<RouteRecordNameGeneric>();
+
+watchEffect(() => {
+    const currentRoute = unref(router.currentRoute).name;
+    if (
+        unref(guardError) ||
+        routes.find(
+            (route) =>
+                route.name === currentRoute ||
+                route.children.find((child) => child.name === currentRoute),
+        )
+    ) {
+        menuSelection.value = currentRoute;
+        blurMenu();
+    }
+});
+
+const blurMenu = () => (document.activeElement as HTMLElement).blur();
 
 const name = computed<string>(() => "User Name");
 

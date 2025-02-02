@@ -10,13 +10,6 @@ export const enum NotificationType {
     ERROR,
 }
 
-const notificationTypes = [
-    NotificationType.INFO,
-    NotificationType.SUCCESS,
-    NotificationType.WARNING,
-    NotificationType.ERROR,
-];
-
 export interface FieldValidationResult {
     id: number | string;
     errorMessages: string[];
@@ -37,7 +30,6 @@ export interface NotificationStore {
     notifyWarning(message: string): void;
     notifyError(message: string, exception?: unknown): void;
     notifyFormValidationErrors(errors: Awaited<SubmitEventPromise>["errors"]): void;
-    generateRandomNotification(): void;
 }
 
 export default function useNotificationStore(
@@ -92,35 +84,6 @@ export default function useNotificationStore(
         });
     }
 
-    function generateRandomNotification() {
-        const randomIndex = Math.floor(Math.random() * (notificationTypes.length + 1));
-        switch (notificationTypes[randomIndex]) {
-            case NotificationType.INFO:
-                notifyInfo("INFO Notification");
-                break;
-            case NotificationType.SUCCESS:
-                notifySuccess("SUCCESS Notification");
-                break;
-            case NotificationType.WARNING:
-                notifyWarning("WARNING Notification");
-                break;
-            case NotificationType.ERROR:
-                const exception = new Error("Exception Message");
-                notifyError("ERROR Notification", exception);
-                break;
-            default:
-                const validationErrors = Array.from(
-                    { length: Math.floor(Math.random() * 5) + 1 },
-                    (_value, index) =>
-                        ({
-                            id: index,
-                            errorMessages: [`Validation Error ${index + 1}`],
-                        }) as FieldValidationResult,
-                );
-                notifyFormValidationErrors(validationErrors);
-        }
-    }
-
     return {
         currentNotification,
         dismissCurrentNotification,
@@ -129,6 +92,5 @@ export default function useNotificationStore(
         notifyWarning,
         notifyError,
         notifyFormValidationErrors,
-        generateRandomNotification,
     };
 }
