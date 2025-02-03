@@ -116,7 +116,7 @@
 <script setup lang="ts">
 import { computed, provide, ref, unref, watchEffect } from "vue";
 import { RouterView, type RouteRecordNameGeneric } from "vue-router";
-import { byIndex, hasMenuItem } from "@/Routes";
+import { byIndex, hasMenuItem } from "@/routes";
 import type { Services } from "@/Services";
 import { defineStore, StoreKey } from "@/Store";
 import logo from "@/assets/logo.png";

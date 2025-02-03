@@ -1,5 +1,5 @@
 import type { Router } from "vue-router";
-import vueRouter from "./VueRouter";
+import vueRouter from "./vueRouter";
 
 export interface Services {
     vueRouter: Router;

@@ -6,7 +6,7 @@ import { createApp } from "vue";
 
 import App from "./App.vue";
 import services from "./Services";
-import vueRouter from "./VueRouter";
+import vueRouter from "./vueRouter";
 import vuetify from "./Vuetify";
 
 const app = createApp(App, { services });

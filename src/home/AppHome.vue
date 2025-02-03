@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { unref } from "vue";
-import { byIndex, hasMenuItemWithDescription } from "@/Routes";
+import { byIndex, hasMenuItemWithDescription } from "@/routes";
 import { injectStore } from "@/Store";
 
 const { router } = injectStore();
